@@ -1,0 +1,3 @@
+# Artefatti di build locali (non prodotti da questo repo)
+build/
+*.tmp
