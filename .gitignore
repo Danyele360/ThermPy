@@ -1,0 +1,8 @@
+# L'installer non e' versionato: viene allegato alla GitHub Release.
+# Un binario di ~23 MB per versione resterebbe nella storia di git per sempre,
+# e chi clona lo scaricherebbe anche volendo solo l'ultima versione.
+dist/
+
+# Artefatti di build locali (prodotti nel repository del codice sorgente)
+build/
+*.tmp

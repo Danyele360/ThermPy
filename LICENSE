@@ -1,0 +1,55 @@
+Termini di licenza di ThermPy
+=============================
+
+Copyright (c) 2026 <Danyele360>
+
+
+ThermPy e' distribuito in forma di eseguibile. Il codice sorgente
+dell'applicazione non e' pubblicato e resta di proprieta' del titolare del
+copyright.
+
+
+1. Uso
+
+   Ti e' concesso di installare e usare ThermPy su un numero qualsiasi di
+   dispositivi, per uso personale o commerciale, senza costi.
+
+
+2. Ridistribuzione
+
+   Puoi ridistribuire il programma di installazione, purche' resti immutato e
+   accompagnato da questa licenza e dal file THIRD-PARTY.md.
+
+
+3. Limitazioni
+
+   Non puoi rimuovere o alterare le note di copyright, ne' presentare ThermPy
+   come opera propria.
+
+   Questa limitazione NON si applica alle operazioni che le licenze dei
+   componenti di terze parti espressamente consentono. In particolare, la
+   LGPL-3.0 ti riconosce il diritto di decompilare e sottoporre a reverse
+   engineering ThermPy nella misura necessaria a correggere e verificare
+   modifiche apportate alle librerie Qt: quel diritto prevale su questo
+   paragrafo.
+
+
+4. Componenti di terze parti
+
+   ThermPy incorpora componenti di terzi, ciascuno con la propria licenza, che
+   prevale su questo documento per quanto riguarda quel componente. L'elenco
+   completo e le istruzioni per esercitare i diritti previsti dalla LGPL sono in
+   THIRD-PARTY.md, e i testi integrali nella cartella licenses/.
+
+
+5. Assenza di garanzia
+
+   IL PROGRAMMA E' FORNITO "COSI' COM'E'", SENZA GARANZIE DI ALCUN TIPO,
+   ESPRESSE O IMPLICITE, COMPRESE, A TITOLO ESEMPLIFICATIVO, LE GARANZIE DI
+   COMMERCIABILITA' E DI IDONEITA' PER UNO SCOPO PARTICOLARE. IN NESSUN CASO IL
+   TITOLARE DEL COPYRIGHT POTRA' ESSERE RITENUTO RESPONSABILE PER RECLAMI, DANNI
+   O ALTRE RESPONSABILITA' DERIVANTI DAL PROGRAMMA O DAL SUO USO.
+
+   ThermPy legge i sensori hardware tramite un driver in modalita' kernel e non
+   modifica alcun parametro del sistema. Resta inteso che l'uso avviene a
+   rischio dell'utente.
