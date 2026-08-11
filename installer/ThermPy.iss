@@ -8,7 +8,7 @@
 ; nel repository del codice sorgente.
 
 #define AppName "ThermPy"
-#define AppVersion "1.0.0"
+#define AppVersion "1.1.0"
 #define AppPublisher "ThermPy"
 #define AppExe "ThermPy.exe"
 #define SourceRoot "..\..\pytemp\dist\ThermPy"

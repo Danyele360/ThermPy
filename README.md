@@ -8,12 +8,12 @@
 
 Temperature CPU per-core, GPU con hot spot, RPM delle ventole, frequenze, potenza
 assorbita, dischi e batteria — tutto in tempo reale, in una finestra sola.
+E un tasto **REC** che registra una sessione e la prepara per l'analisi.
 
-[![Scarica](https://img.shields.io/badge/scarica-ThermPy%201.0.0-2DD4BF?style=for-the-badge)](../../releases/latest)
+[![Scarica](https://img.shields.io/badge/scarica-ThermPy%201.1.0-2DD4BF?style=for-the-badge)](../../releases/latest)
 
 [![Licenza](https://img.shields.io/badge/licenza-gratuito-4EA8FF)](LICENSE)
 [![Piattaforma](https://img.shields.io/badge/piattaforma-Windows%2010%20%7C%2011-0078D4)](#requisiti)
-[![Installer](https://img.shields.io/badge/installer-22.7%20MB-8B93A7)](../../releases/latest)
 
 </div>
 
@@ -52,6 +52,41 @@ vuota che sembra un difetto.
 
 ![Ventole](screenshots/fans.png)
 
+## Registrazione
+
+Un tasto REC che registra una sessione e produce un archivio pensato per essere
+analizzato, anche da un modello di linguaggio.
+
+Il caso d'uso: stai sviluppando un programma, avvii la registrazione, lo usi
+esercitandone le funzioni, fermi e mandi il referto all'AI per capire dove si
+inceppa. Durante la registrazione **`Ctrl+Shift+M` inserisce un marcatore da
+qualunque applicazione**, senza tornare su ThermPy — che ruberebbe il focus al
+programma che stai misurando, alterando proprio ciò che vuoi misurare. Le
+etichette si scrivono alla fine.
+
+![Registrazione](screenshots/recording.png)
+
+### Cosa ricevi
+
+Un archivio con il referto e i dati grezzi separati, perché dieci minuti di
+campionamento sono decine di migliaia di valori: troppi da incollare in una chat.
+All'AI dai `report.md`, poche decine di kilobyte; i CSV restano per approfondire.
+
+Il referto non è un elenco di numeri. **Ogni intervallo fra due marcatori diventa
+una riga con le proprie statistiche**, ed è lì che il collo di bottiglia si vede:
+
+```
+| Marcatore              | Intervallo | Durata | Temp. CPU | Carico CPU | Clock CPU |
+| inizio carico pesante  | 4–16 s     |  12 s  |  69 / 75  |  74 / 90   | 2670/3204 |
+| apro la pagina clienti | 16–28 s    |  12 s  |  76 / 77  |  89 / 97   | 3204/3204 |
+```
+
+Più gli episodi di limitazione **con il motivo** — per la GPU decodificato dal
+driver: power cap software, rallentamento termico hardware, power brake — il
+processo che hai chiesto di sorvegliare con handle e context switch involontari,
+e una sezione che dichiara esplicitamente cosa non è stato misurabile, così
+nessuno scambia un dato assente per uno zero.
+
 ## Impostazioni
 
 Intervallo di campionamento, soglie di allerta, comportamento della tray e — la
@@ -64,7 +99,7 @@ dati, ciascuna con il proprio stato e il motivo.
 
 ## Installazione
 
-Scarica **[ThermPy-Setup-1.0.0.exe](../../releases/latest)** dalla pagina delle
+Scarica **[ThermPy-Setup-1.1.0.exe](../../releases/latest)** dalla pagina delle
 release ed eseguilo.
 
 ![Installer](screenshots/installer.png)
@@ -83,11 +118,11 @@ quello sul desktop, e registra la voce di disinstallazione in "App installate".
 ### Verifica del file scaricato
 
 ```
-SHA256: bfccbb78d786701fbc57fdcbbfcaa019669c0ae183e0d1a34ce494a64abd51b2
+SHA256: 48b91aa2aca048b49b880d025e8a1ba71477db540db852c8ded85a87c4ac2b26
 ```
 
 ```powershell
-Get-FileHash ThermPy-Setup-1.0.0.exe -Algorithm SHA256
+Get-FileHash ThermPy-Setup-1.1.0.exe -Algorithm SHA256
 ```
 
 ---
@@ -178,5 +213,5 @@ configurazione dopo una reinstallazione. Si cancellano a mano se non servono.
 ---
 
 <div align="center">
-<sub>ThermPy 1.0.0 · gratuito · Qt sotto LGPL-3.0</sub>
+<sub>ThermPy 1.1.0 · gratuito · Qt sotto LGPL-3.0</sub>
 </div>

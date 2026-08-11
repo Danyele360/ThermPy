@@ -12,6 +12,7 @@ integrali sono nella cartella [`licenses/`](licenses/).
 | [pythonnet](https://github.com/pythonnet/pythonnet) | MIT | Ponte fra Python e runtime .NET |
 | [psutil](https://github.com/giampaolo/psutil) | BSD-3-Clause | Carichi, frequenze, memoria, batteria |
 | [nvidia-ml-py](https://pypi.org/project/nvidia-ml-py/) | BSD | Accesso a NVML per le GPU NVIDIA |
+| [Lucide](https://lucide.dev) | ISC | Icone della barra di navigazione |
 | [CPython](https://www.python.org/) | PSF License | Interprete incorporato |
 
 ---
