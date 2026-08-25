@@ -8,9 +8,11 @@
 
 Temperature CPU per-core, GPU con hot spot, RPM delle ventole, frequenze, potenza
 assorbita, dischi e batteria — tutto in tempo reale, in una finestra sola.
-E un tasto **REC** che registra una sessione e la prepara per l'analisi.
 
-[![Scarica](https://img.shields.io/badge/scarica-ThermPy%201.1.0-2DD4BF?style=for-the-badge)](../../releases/latest)
+E quando la macchina scotta non si limita a dirtelo: **ti dice quale processo la
+sta scaldando, e te lo fa chiudere da lì.**
+
+[![Scarica](https://img.shields.io/badge/scarica-ThermPy%201.1.1-2DD4BF?style=for-the-badge)](../../releases/latest)
 
 [![Licenza](https://img.shields.io/badge/licenza-gratuito-4EA8FF)](LICENSE)
 [![Piattaforma](https://img.shields.io/badge/piattaforma-Windows%2010%20%7C%2011-0078D4)](#requisiti)
@@ -52,6 +54,32 @@ vuota che sembra un difetto.
 
 ![Ventole](screenshots/fans.png)
 
+## Chi sta scaldando la macchina
+
+Ogni monitor sa dirti che la CPU è a 90 °C. Ma quella è la conseguenza: quello che
+vuoi sapere è **chi**.
+
+
+<div align="center">
+
+<img src="screenshots/notification.png" width="420" alt="Notifica del processo responsabile">
+
+</div>
+
+Quando scatta un alert termico ThermPy cerca il responsabile, e se un processo
+supera il 25% della capacità totale per due campioni di fila lo annuncia con una
+notifica nativa che **mostra la salita** che ha portato all'allarme e offre di
+chiuderlo. Se invece nessuno domina, lo dice: *il carico è distribuito*.
+
+A macchina fredda non costa niente, perché senza un allarme in corso il
+campionamento non gira affatto: enumerare i processi di Windows costa 825 ms
+misurati, e pagarli per sempre significherebbe scaldare la macchina per sorvegliarla.
+
+Il pulsante non uccide niente da sé: apre una conferma, e prima di toccare un
+processo verifica che il nome corrisponda **ancora** a quel PID — in quei secondi
+Windows può averlo riassegnato — che non sia un processo di sistema, e che non sia
+ThermPy stesso.
+
 ## Registrazione
 
 Un tasto REC che registra una sessione e produce un archivio pensato per essere
@@ -89,9 +117,10 @@ nessuno scambia un dato assente per uno zero.
 
 ## Impostazioni
 
-Intervallo di campionamento, soglie di allerta, comportamento della tray e — la
-parte più utile quando qualcosa non torna — la diagnostica delle tre sorgenti
-dati, ciascuna con il proprio stato e il motivo.
+Intervallo di campionamento, soglie di allerta, quota oltre la quale un processo
+viene accusato, comportamento della tray e — la parte più utile quando qualcosa
+non torna — la diagnostica delle tre sorgenti dati, ciascuna con il proprio stato
+e il motivo.
 
 ![Impostazioni](screenshots/settings.png)
 
@@ -99,7 +128,7 @@ dati, ciascuna con il proprio stato e il motivo.
 
 ## Installazione
 
-Scarica **[ThermPy-Setup-1.1.0.exe](../../releases/latest)** dalla pagina delle
+Scarica **[ThermPy-Setup-1.1.1.exe](../../releases/latest)** dalla pagina delle
 release ed eseguilo.
 
 ![Installer](screenshots/installer.png)
@@ -113,16 +142,16 @@ quello sul desktop, e registra la voce di disinstallazione in "App installate".
 - Windows 10 o 11, a 64 bit
 - Privilegi di amministratore per l'uso quotidiano (vedi sotto)
 - Nessun runtime da installare a parte: Python, Qt e il runtime .NET sono già
-  inclusi nei 76 MB installati
+  inclusi nei 87 MB installati
 
 ### Verifica del file scaricato
 
 ```
-SHA256: 48b91aa2aca048b49b880d025e8a1ba71477db540db852c8ded85a87c4ac2b26
+SHA256: b04d9b4b92d8cfb92c46741dc4f0902b3cf1695bdc31c1d3fc5c3cfa4d60ef89
 ```
 
 ```powershell
-Get-FileHash ThermPy-Setup-1.1.0.exe -Algorithm SHA256
+Get-FileHash ThermPy-Setup-1.1.1.exe -Algorithm SHA256
 ```
 
 ---
@@ -185,7 +214,13 @@ LibreHardwareMonitor blocca per decine di millisecondi, e sul thread della UI
 produrrebbe micro-scatti a ogni tick.
 
 Anche l'icona è codice: un arco a gradiente termico disegnato dalla stessa scala di
-colore dei gauge, compilato in un `.ico` a sette risoluzioni.
+colore dei gauge, compilato in un `.ico` a sette risoluzioni. E lo è la sparkline
+dentro la notifica, ridisegnata a ogni allarme sui sessanta secondi che l'hanno
+preceduto.
+
+Le notifiche sono quelle native di Windows e non finestre disegnate a mano: così
+finiscono nel Centro notifiche e rispettano Non disturbare, invece di comparire
+sopra un gioco a schermo intero — cioè esattamente quando la macchina scotta.
 
 Il pacchetto contiene solo i moduli Qt effettivamente usati: quelli per QML, PDF,
 rete e il rasterizzatore OpenGL software sono esclusi, il che dimezza quasi lo
@@ -206,12 +241,17 @@ dalla LGPL sono in **[THIRD-PARTY.md](THIRD-PARTY.md)**.
 Da *Impostazioni → App installate → ThermPy*, oppure dal collegamento
 *Disinstalla ThermPy* nel menu Start.
 
-Le preferenze restano in `HKCU\Software\ThermPy` e i log in
-`%LOCALAPPDATA%\ThermPy`: occupano pochi kilobyte e permettono di ritrovare la
-configurazione dopo una reinstallazione. Si cancellano a mano se non servono.
+Le preferenze restano in `HKCU\Software\ThermPy`, i log e l'immagine dell'ultima
+notifica in `%LOCALAPPDATA%\ThermPy`: occupano pochi kilobyte e permettono di
+ritrovare la configurazione dopo una reinstallazione. Si cancellano a mano se non
+servono.
+
+Resta anche `HKCU\Software\Classes\AppUserModelId\ThermPy.Monitor`, una chiave da
+due valori: è ciò che permette a Windows di attribuire le notifiche a ThermPy
+invece che all'interprete. Senza, i toast non partirebbero affatto.
 
 ---
 
 <div align="center">
-<sub>ThermPy 1.1.0 · gratuito · Qt sotto LGPL-3.0</sub>
+<sub>ThermPy 1.1.1 · gratuito · Qt sotto LGPL-3.0</sub>
 </div>
