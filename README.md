@@ -147,7 +147,7 @@ quello sul desktop, e registra la voce di disinstallazione in "App installate".
 ### Verifica del file scaricato
 
 ```
-SHA256: b04d9b4b92d8cfb92c46741dc4f0902b3cf1695bdc31c1d3fc5c3cfa4d60ef89
+SHA256: 90511a5137d7d4916fb4943f0ef515bf75fcf97ffdd8b676633035e5fa98898a
 ```
 
 ```powershell
