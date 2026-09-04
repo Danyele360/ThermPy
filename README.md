@@ -12,7 +12,7 @@ assorbita, dischi e batteria — tutto in tempo reale, in una finestra sola.
 E quando la macchina scotta non si limita a dirtelo: **ti dice quale processo la
 sta scaldando, e te lo fa chiudere da lì.**
 
-[![Scarica](https://img.shields.io/badge/scarica-ThermPy%201.1.1-2DD4BF?style=for-the-badge)](../../releases/latest)
+[![Scarica](https://img.shields.io/badge/scarica-ThermPy%201.2.0-2DD4BF?style=for-the-badge)](../../releases/latest)
 
 [![Licenza](https://img.shields.io/badge/licenza-gratuito-4EA8FF)](LICENSE)
 [![Piattaforma](https://img.shields.io/badge/piattaforma-Windows%2010%20%7C%2011-0078D4)](#requisiti)
@@ -47,10 +47,14 @@ video, con la tabella completa dei sensori grezzi.
 
 ## Ventole
 
-Una card per ventola con RPM correnti e storico. Quando gli RPM non ci sono,
-ThermPy dice **perché**: distingue "mancano i privilegi di amministratore" da "i
-privilegi ci sono ma il firmware non li espone", invece di mostrare una pagina
-vuota che sembra un difetto.
+Una card per ventola con RPM correnti e storico. Sui portatili **Lenovo Legion e
+LOQ** le ventole si leggono dall'interfaccia WMI del firmware, e ognuna sa cosa
+raffredda: *CPU Fan* e *GPU Fan*, non "Ventola 1" e "Ventola 2". I giri compaiono
+anche nella Panoramica, come anello interno dei due gauge.
+
+Quando gli RPM non ci sono, ThermPy dice **perché**: distingue "mancano i privilegi
+di amministratore" da "i privilegi ci sono ma il firmware non li espone", invece di
+mostrare una pagina vuota che sembra un difetto.
 
 ![Ventole](screenshots/fans.png)
 
@@ -128,7 +132,7 @@ e il motivo.
 
 ## Installazione
 
-Scarica **[ThermPy-Setup-1.1.1.exe](../../releases/latest)** dalla pagina delle
+Scarica **[ThermPy-Setup-1.2.0.exe](../../releases/latest)** dalla pagina delle
 release ed eseguilo.
 
 ![Installer](screenshots/installer.png)
@@ -147,11 +151,11 @@ quello sul desktop, e registra la voce di disinstallazione in "App installate".
 ### Verifica del file scaricato
 
 ```
-SHA256: 52617e8f5dd90b1fc110ef65a4a31c8c159c30e4092b6d72b4672eca4cdad062
+SHA256: 835643a1984eebf91ce66662d7f9483aaa27bd8c77637541cdc5d6b092308667
 ```
 
 ```powershell
-Get-FileHash ThermPy-Setup-1.1.1.exe -Algorithm SHA256
+Get-FileHash ThermPy-Setup-1.2.0.exe -Algorithm SHA256
 ```
 
 ---
@@ -170,10 +174,11 @@ diagnostica hardware.
 
 ## Le tre sorgenti dati
 
-ThermPy non dipende da un'unica fonte: ne interroga tre e le fonde.
+ThermPy non dipende da un'unica fonte: ne interroga quattro e le fonde.
 
 | Sorgente | Priorità | Fornisce |
 |---|:---:|---|
+| **WMI Lenovo** (`root\WMI`) via pythonnet | 20 | RPM delle ventole sui portatili Legion e LOQ, con il dispositivo che raffreddano |
 | **LibreHardwareMonitorLib** via pythonnet | 9 | temperature CPU per-core, ventole, GPU completa, dischi, batteria |
 | **NVML** (driver NVIDIA) | 5 | riserva per la GPU se il runtime .NET non parte |
 | **psutil** | 1 | carichi, frequenze, memoria, batteria; sempre disponibile |
@@ -189,19 +194,31 @@ ciò che resta e lo dichiara nella pagina Impostazioni.
 
 ## Sulle ventole, senza girarci intorno
 
-Sul portatile su cui ThermPy è stato sviluppato (Lenovo `LNVNB161216`, i7-13650HX +
-RTX 5070 Laptop) **la velocità istantanea delle ventole non è ottenibile**, nemmeno
-da amministratore. Le tre strade sono state verificate una per una:
+Sul portatile su cui ThermPy è stato sviluppato (Lenovo LOQ 15IRX10, i7-13650HX +
+RTX 5070 Laptop) la velocità delle ventole non passa da nessuna sorgente generica.
+Le tre strade, verificate una per una:
 
 | Via | Esito |
 |---|---|
 | LibreHardwareMonitor | La motherboard non espone né SuperIO né Embedded Controller: nessun profilo per questo modello |
 | NVML | `NVML_ERROR_NOT_SUPPORTED`, `num fans = 0` — la ventola della GPU è pilotata dall'EC |
-| WMI Lenovo | `LENOVO_FAN_TABLE_DATA` e `LENOVO_FAN_TEST_DATA` espongono curve, limiti e `NumOfFans = 2`, ma nessuna velocità corrente |
+| WMI Lenovo | **È la via buona.** `LENOVO_OTHER_METHOD.GetFeatureValue` restituisce gli RPM correnti |
 
-È un limite del firmware, non del programma: la lettura delle ventole è
-implementata per intero e la pagina si popola da sola su hardware che le espone,
-come i desktop con SuperIO e molti altri portatili.
+Fino alla 1.1.1 questa sezione diceva che non c'era niente da fare. Era sbagliato.
+Il metodo che citano tutte le guide — `Fan_GetCurrentFanSpeed` dei Legion più
+vecchi — su questi modelli non esiste più, ed è il motivo per cui cercandolo non si
+trova nulla; ma il firmware espone gli stessi numeri altrove, ed è da lì che li
+prende Legion Space.
+
+Gli ID delle ventole vengono enumerati dalle tabelle di capability invece di essere
+cablati, e il **ruolo** di ciascuna è dedotto dal firmware: le tabelle dichiarano
+quale sensore governa quale ventola, e il sensore che legge la stessa temperatura
+riportata per la CPU è quello della CPU. Se la deduzione resta ambigua le ventole
+restano numerate, perché un nome sbagliato accanto agli RPM è peggio di uno generico.
+
+Su hardware non Lenovo la lettura resta affidata a LibreHardwareMonitor, e la pagina
+si popola da sola dove il firmware le espone: desktop con SuperIO e molti altri
+portatili.
 
 ---
 
@@ -253,5 +270,5 @@ invece che all'interprete. Senza, i toast non partirebbero affatto.
 ---
 
 <div align="center">
-<sub>ThermPy 1.1.1 · gratuito · Qt sotto LGPL-3.0</sub>
+<sub>ThermPy 1.2.0 · gratuito · Qt sotto LGPL-3.0</sub>
 </div>
