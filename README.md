@@ -47,10 +47,8 @@ video, con la tabella completa dei sensori grezzi.
 
 ## Ventole
 
-Una card per ventola con RPM correnti e storico. Sui portatili **Lenovo Legion e
-LOQ** le ventole si leggono dall'interfaccia WMI del firmware, e ognuna sa cosa
-raffredda: *CPU Fan* e *GPU Fan*, non "Ventola 1" e "Ventola 2". I giri compaiono
-anche nella Panoramica, come anello interno dei due gauge.
+Una card per ventola con RPM correnti e storico, e i giri anche nella Panoramica,
+come anello interno dei due gauge. **Supporto Lenovo Legion e LOQ.**
 
 Quando gli RPM non ci sono, ThermPy dice **perché**: distingue "mancano i privilegi
 di amministratore" da "i privilegi ci sono ma il firmware non li espone", invece di
